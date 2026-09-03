@@ -44,9 +44,39 @@ fun MeuAplicativo() {
         mutableStateOf(1)
     }
 
+    val saldo = remember {
+        mutableStateOf(500.0)
+    }
+
+    val movimentacoes = remember {
+        mutableStateOf(listOf<String>())
+    }
+
+
     if (tela.value == 1) {
 
         TelaInicial(
+
+            saldo = saldo.value,
+
+            adicionarEntrada = { numero ->
+
+                saldo.value = saldo.value + numero
+
+                movimentacoes.value =
+                    movimentacoes.value +
+                            "Entrada: + R$ $numero"
+            },
+
+            adicionarGasto = { numero ->
+
+                saldo.value = saldo.value - numero
+
+                movimentacoes.value =
+                    movimentacoes.value +
+                            "Gasto: - R$ $numero"
+            },
+
             abrirMovimentacoes = {
                 tela.value = 2
             },
@@ -58,19 +88,38 @@ fun MeuAplicativo() {
 
     } else if (tela.value == 2) {
 
-        TelaMovimentacoes()
+        TelaMovimentacoes(
+
+            movimentacoes = movimentacoes.value,
+
+            voltar = {
+                tela.value = 1
+            }
+        )
 
     } else {
 
-        TelaSobre()
+        TelaSobre(
 
+            voltar = {
+                tela.value = 1
+            }
+        )
     }
 }
 
 
 @Composable
 fun TelaInicial(
+
+    saldo: Double,
+
+    adicionarEntrada: (Double) -> Unit,
+
+    adicionarGasto: (Double) -> Unit,
+
     abrirMovimentacoes: () -> Unit,
+
     abrirSobre: () -> Unit
 ) {
 
@@ -78,9 +127,6 @@ fun TelaInicial(
         mutableStateOf("")
     }
 
-    val saldo = remember {
-        mutableStateOf(500.0)
-    }
 
     Column(
         modifier = Modifier
@@ -102,7 +148,7 @@ fun TelaInicial(
         )
 
         Text(
-            text = "R$ ${saldo.value}",
+            text = "R$ $saldo",
             fontSize = 30.sp
         )
 
@@ -111,6 +157,7 @@ fun TelaInicial(
         )
 
         OutlinedTextField(
+
             value = valor.value,
 
             onValueChange = {
@@ -128,15 +175,17 @@ fun TelaInicial(
             modifier = Modifier.height(20.dp)
         )
 
+
         BotoesDinheiro(
 
             adicionar = {
 
-                val numero = valor.value.toDoubleOrNull()
+                val numero =
+                    valor.value.toDoubleOrNull()
 
                 if (numero != null) {
 
-                    saldo.value = saldo.value + numero
+                    adicionarEntrada(numero)
 
                     valor.value = ""
                 }
@@ -144,25 +193,30 @@ fun TelaInicial(
 
             retirar = {
 
-                val numero = valor.value.toDoubleOrNull()
+                val numero =
+                    valor.value.toDoubleOrNull()
 
                 if (numero != null) {
 
-                    saldo.value = saldo.value - numero
+                    adicionarGasto(numero)
 
                     valor.value = ""
                 }
             }
         )
 
+
         Spacer(
             modifier = Modifier.height(25.dp)
         )
 
+
         Button(
+
             onClick = {
                 abrirMovimentacoes()
             },
+
             modifier = Modifier.fillMaxWidth()
         ) {
 
@@ -171,14 +225,18 @@ fun TelaInicial(
             )
         }
 
+
         Spacer(
             modifier = Modifier.height(15.dp)
         )
 
+
         Button(
+
             onClick = {
                 abrirSobre()
             },
+
             modifier = Modifier.fillMaxWidth()
         ) {
 
@@ -192,14 +250,18 @@ fun TelaInicial(
 
 @Composable
 fun BotoesDinheiro(
+
     adicionar: () -> Unit,
+
     retirar: () -> Unit
 ) {
 
     Button(
+
         onClick = {
             adicionar()
         },
+
         modifier = Modifier.fillMaxWidth()
     ) {
 
@@ -208,14 +270,18 @@ fun BotoesDinheiro(
         )
     }
 
+
     Spacer(
         modifier = Modifier.height(15.dp)
     )
 
+
     Button(
+
         onClick = {
             retirar()
         },
+
         modifier = Modifier.fillMaxWidth()
     ) {
 
