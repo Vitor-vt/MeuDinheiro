@@ -83,6 +83,10 @@ fun MeuAplicativo() {
 
             abrirSobre = {
                 tela.value = 3
+            },
+
+            abrirResumo = {
+                tela.value = 4
             }
         )
 
@@ -97,10 +101,19 @@ fun MeuAplicativo() {
             }
         )
 
-    } else {
+    } else if (tela.value == 3) {
 
         TelaSobre(
+            voltar = {
+                tela.value = 1
+            }
+        )
 
+    } else if (tela.value == 4) {
+
+        TelaResumoMes(
+            entradas = 1200.0,
+            gastos = 700.0,
             voltar = {
                 tela.value = 1
             }
@@ -120,7 +133,9 @@ fun TelaInicial(
 
     abrirMovimentacoes: () -> Unit,
 
-    abrirSobre: () -> Unit
+    abrirSobre: () -> Unit,
+
+    abrirResumo: () -> Unit
 ) {
 
     val valor = remember {
@@ -241,7 +256,7 @@ fun TelaInicial(
         ) {
 
             Text(
-                text = "Sobre"
+                text =  "Sobre"
             )
         }
     }
