@@ -45,7 +45,15 @@ fun MeuAplicativo() {
     }
 
     val saldo = remember {
-        mutableStateOf(500.0)
+        mutableStateOf(0.0)
+    }
+
+    val entradas = remember {
+        mutableStateOf(0.0)
+    }
+
+    val gastos = remember {
+        mutableStateOf(0.0)
     }
 
     val movimentacoes = remember {
@@ -63,6 +71,8 @@ fun MeuAplicativo() {
 
                 saldo.value = saldo.value + numero
 
+                entradas.value = entradas.value + numero
+
                 movimentacoes.value =
                     movimentacoes.value +
                             "Entrada: + R$ $numero"
@@ -71,6 +81,8 @@ fun MeuAplicativo() {
             adicionarGasto = { numero ->
 
                 saldo.value = saldo.value - numero
+
+                gastos.value = gastos.value + numero
 
                 movimentacoes.value =
                     movimentacoes.value +
@@ -112,8 +124,8 @@ fun MeuAplicativo() {
     } else if (tela.value == 4) {
 
         TelaResumoMes(
-            entradas = 1200.0,
-            gastos = 700.0,
+            entradas = entradas.value,
+            gastos = gastos.value,
             voltar = {
                 tela.value = 1
             }
@@ -247,18 +259,20 @@ fun TelaInicial(
 
 
         Button(
-
             onClick = {
-                abrirSobre()
+                abrirResumo()
             },
 
             modifier = Modifier.fillMaxWidth()
         ) {
-
             Text(
-                text =  "Sobre"
+                text = "Resumo do mês"
             )
         }
+
+        Spacer(
+            modifier = Modifier.height(15.dp)
+        )
     }
 }
 
