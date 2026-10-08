@@ -1,12 +1,13 @@
 package com.example.myapplicationprimer
 
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.OutlinedTextField
@@ -21,6 +22,9 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun TelaCaixinha(
     dinheiroGuardado: Double,
+    movimentacoes: List<MovimentacaoCaixinha>,
+    abrirDetalhes: (MovimentacaoCaixinha) -> Unit,
+    removerMovimentacao: (MovimentacaoCaixinha) -> Unit,
     guardarDinheiro: (Double) -> Unit,
     retirarDinheiro: (Double) -> Unit,
     voltar: () -> Unit
@@ -45,9 +49,7 @@ fun TelaCaixinha(
             modifier = Modifier.height(25.dp)
         )
 
-        Text(
-            text = "Dinheiro guardado"
-        )
+        Text("Dinheiro guardado")
 
         Card(
             modifier = Modifier.fillMaxWidth()
@@ -80,7 +82,6 @@ fun TelaCaixinha(
 
         Button(
             onClick = {
-
                 val numero = valor.value.toDoubleOrNull()
 
                 if (numero != null) {
@@ -99,7 +100,6 @@ fun TelaCaixinha(
 
         Button(
             onClick = {
-
                 val numero = valor.value.toDoubleOrNull()
 
                 if (numero != null) {
@@ -113,13 +113,68 @@ fun TelaCaixinha(
         }
 
         Spacer(
-            modifier = Modifier.height(20.dp)
+            modifier = Modifier.height(15.dp)
+        )
+
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        ) {
+
+            items(movimentacoes) { movimentacao ->
+
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 10.dp)
+                ) {
+
+                    Column(
+                        modifier = Modifier.padding(15.dp)
+                    ) {
+
+                        Text(
+                            text = "${movimentacao.tipo}: R$ ${movimentacao.valor}",
+                            fontSize = 18.sp
+                        )
+
+                        Spacer(
+                            modifier = Modifier.height(8.dp)
+                        )
+
+                        Button(
+                            onClick = {
+                                abrirDetalhes(movimentacao)
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Ver detalhes")
+                        }
+
+                        Spacer(
+                            modifier = Modifier.height(5.dp)
+                        )
+
+                        Button(
+                            onClick = {
+                                removerMovimentacao(movimentacao)
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Remover")
+                        }
+                    }
+                }
+            }
+        }
+
+        Spacer(
+            modifier = Modifier.height(10.dp)
         )
 
         Button(
-            onClick = {
-                voltar()
-            },
+            onClick = voltar,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Voltar")

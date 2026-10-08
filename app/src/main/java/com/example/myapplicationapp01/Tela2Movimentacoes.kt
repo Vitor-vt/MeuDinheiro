@@ -1,12 +1,13 @@
 package com.example.myapplicationprimer
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
@@ -15,12 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-
 @Composable
 fun TelaMovimentacoes(
-
-    movimentacoes: List<String>,
-
+    movimentacoes: List<Movimentacao>,
+    abrirDetalhes: (Movimentacao) -> Unit,
     voltar: () -> Unit
 ) {
 
@@ -35,74 +34,73 @@ fun TelaMovimentacoes(
             fontSize = 28.sp
         )
 
-
         Spacer(
-            modifier = Modifier.height(30.dp)
+            modifier = Modifier.height(20.dp)
         )
 
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        ) {
 
-        if (movimentacoes.isEmpty()) {
+            items(movimentacoes) { movimentacao ->
 
-            Text(
-                text = "Nenhuma movimentação cadastrada."
-            )
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 10.dp)
+                ) {
 
-        } else {
+                    Column(
+                        modifier = Modifier.padding(15.dp)
+                    ) {
 
-            for (movimentacao in movimentacoes) {
+                        Text(
+                            text = movimentacao.descricao,
+                            fontSize = 20.sp
+                        )
 
-                ItemMovimentacao(
-                    texto = movimentacao
-                )
+                        Spacer(
+                            modifier = Modifier.height(5.dp)
+                        )
 
-                Spacer(
-                    modifier = Modifier.height(15.dp)
-                )
+                        Text(
+                            text = "Tipo: ${movimentacao.tipo}"
+                        )
+
+                        Text(
+                            text = "Valor: R$ ${movimentacao.valor}"
+                        )
+
+                        Spacer(
+                            modifier = Modifier.height(10.dp)
+                        )
+
+                        Button(
+                            onClick = {
+                                abrirDetalhes(movimentacao)
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Ver detalhes")
+                        }
+                    }
+                }
             }
         }
 
-
         Spacer(
-            modifier = Modifier.height(30.dp)
+            modifier = Modifier.height(10.dp)
         )
 
-
         Button(
-
             onClick = {
                 voltar()
             },
-
             modifier = Modifier.fillMaxWidth()
         ) {
-
-            Text(
-                text = "Voltar"
-            )
-        }
-    }
-}
-
-
-@Composable
-fun ItemMovimentacao(
-
-    texto: String
-) {
-
-    Card(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp)
-        ) {
-
-            Text(
-                text = texto
-            )
+            Text("Voltar")
         }
     }
 }
