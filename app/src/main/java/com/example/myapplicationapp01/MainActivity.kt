@@ -1,9 +1,9 @@
 package com.example.myapplicationprimer
 
+import androidx.compose.foundation.layout.Column
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -56,6 +56,14 @@ fun MeuAplicativo() {
         mutableStateOf(0.0)
     }
 
+    val meta = remember {
+        mutableStateOf(0.0)
+    }
+
+    val dinheiroGuardado = remember {
+        mutableStateOf(0.0)
+    }
+
     val movimentacoes = remember {
         mutableStateOf(listOf<String>())
     }
@@ -99,9 +107,18 @@ fun MeuAplicativo() {
 
             abrirResumo = {
                 tela.value = 4
+            },
+            abrirMeta = {
+                tela.value = 5
+            },
+            abrirCaixinha = {
+                tela.value = 6
+            },
+            abrirTransferencia = {
+                tela.value = 7
             }
-        )
 
+        )
     } else if (tela.value == 2) {
 
         TelaMovimentacoes(
@@ -131,6 +148,62 @@ fun MeuAplicativo() {
             }
         )
     }
+    else if (tela.value == 5) {
+
+        TelaMetaEconomia(
+            meta = meta.value,
+            economizado = entradas.value - gastos.value,
+
+            alterarMeta = { novoValor ->
+                meta.value = novoValor
+            },
+
+            voltar = {
+                tela.value = 1
+            }
+        )
+    }
+
+    else if (tela.value == 6) {
+
+        TelaCaixinha(
+            dinheiroGuardado = dinheiroGuardado.value,
+
+            guardarDinheiro = { valor ->
+                dinheiroGuardado.value = dinheiroGuardado.value + valor
+            },
+
+            retirarDinheiro = { valor ->
+                if (valor <= dinheiroGuardado.value) {
+                    dinheiroGuardado.value = dinheiroGuardado.value - valor
+                    saldo.value = saldo.value + valor
+                }
+            },
+
+            voltar = {
+                tela.value = 1
+            }
+        )
+    }
+    else if (tela.value == 7) {
+
+        TelaTransferencia(
+            saldo = saldo.value,
+
+            transferir = { valor, destinatario ->
+
+                saldo.value = saldo.value - valor
+
+                movimentacoes.value =
+                    movimentacoes.value +
+                            "Transferência: - R$ $valor para $destinatario"
+            },
+
+            voltar = {
+                tela.value = 1
+            }
+        )
+    }
 }
 
 
@@ -147,8 +220,17 @@ fun TelaInicial(
 
     abrirSobre: () -> Unit,
 
-    abrirResumo: () -> Unit
+    abrirResumo: () -> Unit,
+
+    abrirMeta: () -> Unit,
+
+    abrirCaixinha: () -> Unit,
+
+    abrirTransferencia: () -> Unit
+
+
 ) {
+
 
     val valor = remember {
         mutableStateOf("")
@@ -258,11 +340,14 @@ fun TelaInicial(
         )
 
 
+
+        Spacer(
+            modifier = Modifier.height(15.dp)
+        )
         Button(
             onClick = {
                 abrirResumo()
             },
-
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
@@ -273,6 +358,46 @@ fun TelaInicial(
         Spacer(
             modifier = Modifier.height(15.dp)
         )
+
+        Button(
+            onClick = {
+                abrirMeta()
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = "Meta de economia"
+            )
+        }
+
+        Spacer(
+            modifier = Modifier.height(15.dp)
+        )
+        Button(
+            onClick = {
+                abrirCaixinha()
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = "Minha Caixinha"
+            )
+        }
+
+        Spacer(
+            modifier = Modifier.height(15.dp)
+        )
+
+        Button(
+            onClick = {
+                abrirTransferencia()
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = "Transferência"
+            )
+        }
     }
 }
 
