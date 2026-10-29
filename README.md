@@ -409,7 +409,7 @@ As funcionalidades que podem ser demonstradas incluem:
 
 ### 🎥 Vídeo de demonstração — Trabalho 3
 
-*Adicionar o link do vídeo demonstrando o banco de dados Room e as operações CRUD.*
+*[Parte 3 do APP.](https://youtu.be/22sGwhTUWVk)*
 
 ---
 
